@@ -98,6 +98,9 @@ namespace StarterAssets
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
+        // 공격용 애니메이션 ID 추가
+        private int _animIDAttack1;
+
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
 #endif
@@ -159,6 +162,7 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            HandleAttack();
         }
 
         private void LateUpdate()
@@ -173,6 +177,8 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            // Attack1 애니메이션 해시 추가
+            _animIDAttack1 = Animator.StringToHash("Attack1"); //Attact 트리거
         }
 
         private void GroundedCheck()
@@ -347,6 +353,20 @@ namespace StarterAssets
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
         }
+        private void HandleAttack()
+        {
+            if (_input.attack) // 마우스 왼쪽 클릭하면
+            {
+                if (_hasAnimator)
+                {
+                    _animator.SetTrigger(_animIDAttack1);
+                }
+
+                // 공격 입력 초기화해서 연속 재생 방지
+                _input.attack = false;
+            }
+        }
+
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
